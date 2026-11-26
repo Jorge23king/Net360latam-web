@@ -416,13 +416,13 @@
             <h2 class="x-h2">¿Conversamos?</h2>
             <p class="x-lead">Agenda una demo de 30 minutos y te mostramos la plataforma con tu operación.</p>
             <div class="x-contact">
-              <form class="x-form x-glassd" onsubmit="return false" aria-label="Agendar demo">
-                <label>Nombre<input type="text" autocomplete="name" /></label>
-                <label>Empresa<input type="text" autocomplete="organization" /></label>
-                <label>Correo<input type="email" autocomplete="email" /></label>
-                <label>Teléfono<input type="tel" autocomplete="tel" /></label>
+              <form class="x-form x-glassd" id="x-demo-form" action="contacto.php" method="post" aria-label="Agendar demo">
+                <label>Nombre<input type="text" name="nombre" autocomplete="name" required /></label>
+                <label>Empresa<input type="text" name="empresa" autocomplete="organization" /></label>
+                <label>Correo<input type="email" name="correo" autocomplete="email" required /></label>
+                <label>Teléfono<input type="tel" name="telefono" autocomplete="tel" /></label>
                 <label class="x-full">¿Qué necesitas?
-                  <select>
+                  <select name="necesita">
                     <option>Contact center</option>
                     <option>Agente IA</option>
                     <option>SMS masivo</option>
@@ -432,8 +432,10 @@
                     <option>Otro</option>
                   </select>
                 </label>
-                <label class="x-full">Mensaje<textarea></textarea></label>
+                <label class="x-full">Mensaje<textarea name="mensaje"></textarea></label>
+                <input type="text" name="sitio" tabindex="-1" autocomplete="off" aria-hidden="true" style="position:absolute;left:-9999px;width:1px;height:1px;opacity:0" />
                 <div class="x-full"><button class="x-btn x-btn--grad" type="submit">Agendar demo</button></div>
+                <p class="x-full x-formnote" id="x-demo-status" role="status" aria-live="polite" hidden></p>
                 <p class="x-full x-formnote">Al enviar aceptas nuestra <a href="#privacidad" data-x-policy>Política de Privacidad</a>.</p>
               </form>
               <div class="x-info x-glassd">
@@ -592,6 +594,26 @@
         }
         var timer = setInterval(tick, 1000);
         tick();
+      })();
+    </script>
+    <script>
+      (function () {
+        var f = document.getElementById('x-demo-form'); if (!f) return;
+        var st = document.getElementById('x-demo-status'), btn = f.querySelector('button[type=submit]');
+        function msg(t, ok) { st.hidden = false; st.textContent = t; st.style.color = ok ? '#0a8f63' : '#c0392b'; st.style.fontWeight = '600'; }
+        f.addEventListener('submit', function (e) {
+          e.preventDefault();
+          if (!f.reportValidity()) return;
+          btn.disabled = true; var txt = btn.textContent; btn.textContent = 'Enviando…';
+          fetch(f.action, { method: 'POST', body: new FormData(f) })
+            .then(function (r) { return r.json().catch(function () { return { ok: false }; }); })
+            .then(function (d) {
+              if (d && d.ok) { f.reset(); msg('¡Listo! Recibimos tu solicitud y te contactaremos pronto.', true); }
+              else { msg((d && d.error) || 'No se pudo enviar. Escríbenos a contacto@net360latam.com.', false); }
+            })
+            .catch(function () { msg('No se pudo enviar. Escríbenos a contacto@net360latam.com o por WhatsApp.', false); })
+            .then(function () { btn.disabled = false; btn.textContent = txt; });
+        });
       })();
     </script>
   </body>

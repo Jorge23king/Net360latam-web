@@ -21,3 +21,9 @@ Sitio estático: un solo `index.html`, sin compilación ni dependencias de servi
 - **Black Week:** la cuenta regresiva termina el 30-11-2026 a las 23:59 (Santiago). Después de esa fecha hay que retirar o actualizar la sección.
 - **Imágenes:** pesan entre 1,2 y 1,6 MB. Se recomienda convertirlas a WebP o JPG optimizado.
 - **SEO:** agregar las etiquetas og: y un favicon.
+
+## Formulario "Agendar demo" (26-11-2026)
+- El formulario envía por `fetch` a `contacto.php` (en la raíz), que manda cada solicitud a **contacto@net360latam.com** con Reply-To del cliente.
+- Requiere hosting con **PHP y mail() habilitado** (DonWeb/Ferozo sirve). En un hosting solo estático (Netlify, GitHub Pages) no funciona: habría que cambiar a Netlify Forms u otro servicio.
+- Remitente: `web@net360latam.com` (cambiar en `contacto.php` si el hosting exige otra casilla). Revisar SPF del dominio para que no caiga en spam.
+- Antispam: campo oculto `sitio` (honeypot). Probar con un envío real después de publicar.
